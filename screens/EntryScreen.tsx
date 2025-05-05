@@ -1,44 +1,37 @@
-import React, {useEffect} from 'react';
-import {View, Image, StyleSheet, Alert} from 'react-native';
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Button, Card, Text} from 'react-native-paper';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Entry'>;
 
 const EntryScreen: React.FC<Props> = ({navigation}) => {
-  const safePadding = '5%';
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
         <Card.Content>
           <Text variant="headlineLarge" style={styles.title}>
-            Welcome to
+            Where Is App
           </Text>
-          <Text variant="headlineLarge" style={styles.title}>
-            Notes App
-          </Text>
-          <Text variant="bodyLarge" style={styles.subtitle}>
-            Manage your notes efficiently
+          <Text variant="bodyMedium" style={styles.subtitle}>
+            Keep track of important items with ease
           </Text>
         </Card.Content>
       </Card>
       <View style={styles.buttonContainer}>
         <Button
           mode="contained"
-          style={[styles.button, styles.primaryButton]}
+          style={styles.primaryButton}
           labelStyle={styles.buttonLabel}
-          onPress={() => navigation.navigate('RecordCreation')}  
-        >
+          onPress={() => navigation.navigate('RecordCreation')}>
           Add New
         </Button>
         <Button
-          mode="contained"
-          style={[styles.button, styles.secondaryButton]}
+          mode="outlined"
+          style={styles.secondaryButton}
           labelStyle={styles.secondaryButtonLabel}
-          onPress={() => navigation.navigate('FlatList')}  
-          >
+          onPress={() => navigation.navigate('FlatList')}>
           List Items
         </Button>
       </View>
@@ -47,53 +40,55 @@ const EntryScreen: React.FC<Props> = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  primaryButton: {
-    backgroundColor: 'black',
-  },
-  secondaryButton: {
-    backgroundColor: 'white',
-    borderWidth: 2,
-    borderColor: 'black',
-  },
-  buttonLabel: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  secondaryButtonLabel: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: 'black',
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#FFFFFF',
+    padding: 24,
+    backgroundColor: '#F5F5F5',
   },
   card: {
-    width: '100%',
-    padding: 20,
-    borderRadius: 12,
-    elevation: 4,
+    width: '90%',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    elevation: 6,
     backgroundColor: 'white',
   },
   title: {
     textAlign: 'center',
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   subtitle: {
     textAlign: 'center',
     color: 'gray',
+    marginBottom: 16,
   },
   buttonContainer: {
-    marginTop: 20,
-    width: '100%',
+    marginTop: 24,
+    width: '90%',
   },
-  button: {
-    marginVertical: 10,
+  primaryButton: {
+    backgroundColor: '#6200EE',
+    borderRadius: 8,
+    marginVertical: 8,
+  },
+  secondaryButton: {
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#6200EE',
+    marginVertical: 8,
+  },
+  buttonLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  secondaryButtonLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#6200EE',
   },
 });
 
