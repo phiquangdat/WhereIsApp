@@ -1,121 +1,97 @@
-# WhereIsApp
+This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-## Overview
+# Getting Started
 
-WhereIsApp is a React Native mobile application designed to help users record and manage location-based items with photo capture and list management features. Built for Android and iOS, it leverages modern libraries for navigation, camera functionality, and a user-friendly interface.
+> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
-## Features
+## Step 1: Start Metro
 
-- **R1**: Navigate between Entry, Record Creation, and List screens.
-- **R2**: Capture photos using the camera.
-- **R3**: Display records in a scrollable list.
-- **R4**: Persist data across app restarts.
-- **R5.3**: Store photos locally with records.
-- **R8.1**: Access camera with permission handling.
-- **R9.1–R9.2**: Intuitive UI with error handling.
-- **R6 (Optional)**: Search functionality for records.
-- **R7 (Optional)**: Delete records.
-- **R9.3 (Optional)**: Confirm deletions.
+First, you will need to run **Metro**, the JavaScript build tool for React Native.
 
-## Prerequisites
+To start the Metro dev server, run the following command from the root of your React Native project:
 
-- Node.js (v18.x or later)
-- npm (v9.x or later)
-- Android Studio with Android SDK (API 33+)
-- Xcode (for iOS development)
-- Emulator or physical device
+```sh
+# Using npm
+npm start
 
-## Installation
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/yourusername/WhereIsApp.git
-cd WhereIsApp
+# OR using Yarn
+yarn start
 ```
 
-### 2. Install Dependencies
+## Step 2: Build and run your app
 
-```bash
-npm install
-cd ios && pod install && cd ..
+With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+
+### Android
+
+```sh
+# Using npm
+npm run android
+
+# OR using Yarn
+yarn android
 ```
 
-### 3. Configure Environment
+### iOS
 
-- **Android**:
+For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
 
-  - Set up `android/local.properties` with:
-    ```
-    sdk.dir=/Users/yourusername/Library/Android/sdk
-    ndk.dir=/Users/yourusername/Library/Android/sdk/ndk/27.1.12297006
-    ```
-  - Ensure Gradle 8.14 is used (check `gradle-wrapper.properties`).
+The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
 
-- **iOS**:
-  - Open `ios/WhereIsApp.xcodeproj` in Xcode.
-  - Configure team and signing certificates.
+```sh
+bundle install
+```
 
-### 4. Permissions
+Then, and every time you update your native dependencies, run:
 
-- **Android**: Update `AndroidManifest.xml` with camera permissions.
-- **iOS**: Update `Info.plist` with camera usage descriptions.
+```sh
+bundle exec pod install
+```
 
-### 5. Run the App
+For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
 
-- **Start Metro**:
-  ```bash
-  npx react-native start --reset-cache
-  ```
-- **Run on Android**:
-  ```bash
-  npx react-native run-android --verbose [--port 8082] //Incase the start command took port 8081
-  adb reverse tcp:8081 tcp:8081
-  ```
-- **Run on iOS**:
-  ```bash
-  npx react-native run-ios
-  ```
+```sh
+# Using npm
+npm run ios
 
-## Usage
+# OR using Yarn
+yarn ios
+```
 
-1. Launch the app to see the Entry screen with "Add New" and "List Items" buttons.
-2. Tap "Add New" to access the Record Creation screen and capture a photo.
-3. View and manage records on the List screen.
-4. Test search and deletion (if implemented).
+If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
 
-## Dependencies
+This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
-- React Native: 0.79.2
-- @react-navigation/stack: 7.3.0
-- react-native-screens: 4.10.0
-- react-native-vision-camera: 4.6.4
-- Other standard React Native libraries
+## Step 3: Modify your app
 
-## Development
+Now that you have successfully run the app, let's make changes!
 
-- **Code Structure**: Screens are in `screens/`, components in `components/`.
-- **Testing**: Use Android Studio Logcat or Xcode console for debugging.
-- **Contributing**: Fork the repo, create a branch, and submit a PR.
+Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
 
-## Troubleshooting
+When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
 
-- **Build Fails**: Run `./gradlew app:installDebug --stacktrace` and check logs.
+- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
+- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
 
-Remove the gradle in your machine and start again:
+## Congratulations! :tada:
 
-`rm -rf /Users/yourusername/.gradle/`
-`cd android`
-`./gradlew clean build`
-`cd ..`
-`npx react-native run-android --verbose`
-- **Camera Issues**: Ensure permissions are granted and a camera-supported device is used.
-- **Dependency Conflicts**: Use `npm install --legacy-peer-deps` as a fallback.
+You've successfully run and modified your React Native App. :partying_face:
 
-## License
+### Now what?
 
-MIT License - See `LICENSE` file for details.
+- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
+- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
 
-## Contact
+# Troubleshooting
 
-For issues or questions, open an issue on the GitHub repository.
+If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+
+# Learn More
+
+To learn more about React Native, take a look at the following resources:
+
+- [React Native Website](https://reactnative.dev) - learn more about React Native.
+- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
+- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
+- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
+- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.

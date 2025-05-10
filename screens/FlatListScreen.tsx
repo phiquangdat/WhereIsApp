@@ -1,94 +1,201 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Text} from 'react-native-paper';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FlatList'>;
 
 type Note = {
-    id: string;
-    name: string;
-    description: string;
-    image?: string;
-    location?: { latitude: number; longitude: number } | null;
+  id: string;
+  name: string;
+  description: string;
+  image?: string;
+  location?: {latitude: number; longitude: number} | null;
 };
 
+const {width} = Dimensions.get('window');
+
 const FlatListScreen: React.FC<Props> = ({navigation}) => {
+  const [searchText, setSearchText] = useState('');
+  const [notes, setNotes] = useState<Note[]>([]);
 
-    const [searchText, setSearchText] = useState('');
-    const [notes, setNotes] = useState<Note[]>([]);
+  const loadNotes = async () => {
+    try {
+      const storedNotes = await AsyncStorage.getItem('records');
+      if (storedNotes) {
+        setNotes(JSON.parse(storedNotes));
+      }
+    } catch (error) {
+      console.error('Failed to load notes:', error);
+    }
+  };
 
-    const loadNotes = async () => {
-        try {
-            const storedNotes = await AsyncStorage.getItem('records');
-            if (storedNotes) {
-                console.debug('ahhahahaha:', storedNotes);
-                setNotes(JSON.parse(storedNotes));
-            }
-        } catch (error) {
-            console.error('Failed to load notes:', error);
+  useEffect(() => {
+    loadNotes();
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadNotes();
+    }, []),
+  );
+
+  const filteredNotes = notes.filter(note =>
+    note.name.toLowerCase().includes(searchText.toLowerCase()),
+  );
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
+          <Icon name="arrow-left" size={24} color="#4c669f" />
+        </TouchableOpacity>
+        <Text style={styles.title}>My Notes</Text>
+      </View>
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search notes..."
+        value={searchText}
+        onChangeText={setSearchText}
+        placeholderTextColor="#666"
+      />
+      <FlatList
+        data={filteredNotes}
+        keyExtractor={item => item.id}
+        contentContainerStyle={styles.listContainer}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() =>
+              navigation.navigate('ViewOneItem', {noteId: item.id})
+            }>
+            {item.image ? (
+              <Image
+                source={{uri: 'file://' + item.image}}
+                style={styles.thumbnail}
+              />
+            ) : (
+              <View style={styles.placeholder}>
+                <Icon name="image" size={40} color="#3b5998" />
+              </View>
+            )}
+            <View style={styles.textContainer}>
+              <Text style={styles.itemTitle}>{item.name}</Text>
+              <Text style={styles.itemDescription} numberOfLines={2}>
+                {item.description}
+              </Text>
+            </View>
+            <Icon name="chevron-right" size={24} color="#3b5998" />
+          </TouchableOpacity>
+        )}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Icon name="note-text-outline" size={60} color="#4c669f" />
+            <Text style={styles.emptyText}>No notes found</Text>
+          </View>
         }
-    };
-
-    useEffect(() => {
-        loadNotes();
-    }, []);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            loadNotes();
-        }, [])
-    );
-
-    const filteredNotes = notes.filter(note => note.name.toLowerCase().includes(searchText.toLowerCase()));
-
-    return (
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                <Icon name="arrow-back" size={24} color="#000" />
-            </TouchableOpacity>
-
-            <Text style={styles.title}>Flat List Screen</Text>
-
-            <TextInput
-                style={styles.searchBar}
-                placeholder="Search notes..."
-                value={searchText}
-                onChangeText={setSearchText}
-            />
-
-            <FlatList
-                data={filteredNotes}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.itemContainer} 
-                    onPress={() => navigation.navigate('ViewOneItem', { noteId: item.id })}
-                    >
-                        {item.image ? (
-                            <Image source={{ uri: 'file://' + item.image }} style={styles.thumbnail} />
-                        ) : (
-                            <View style={styles.placeholder}><Icon name="image" size={40} color="#aaa" /></View>
-                        )}
-                        <Text style={styles.itemText}>{item.name}</Text>
-                    </TouchableOpacity>
-                )}
-            />
-        </View>
-    );
+      />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fff', padding: 20 },
-    backButton: { position: 'absolute', top: 20, left: 20, zIndex: 10 },
-    searchBar: { height: 40, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, paddingHorizontal: 10, marginBottom: 10 },
-    title: { fontSize: 22, fontWeight: 'bold', textAlign: 'center', marginBottom: 20 },
-    itemContainer: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderColor: '#ccc' },
-    thumbnail: { width: 50, height: 50, borderRadius: 5, marginRight: 10 },
-    placeholder: { width: 50, height: 50, borderRadius: 5, backgroundColor: '#f0f0f0', alignItems: 'center', justifyContent: 'center', marginRight: 10 },
-    itemText: { fontSize: 16 }
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    padding: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  backButton: {
+    marginRight: 15,
+  },
+  title: {
+    color: '#4c669f',
+    fontWeight: 'bold',
+    fontSize: 22,
+    flex: 1,
+    textAlign: 'center',
+  },
+  searchBar: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    backgroundColor: '#f7f7f7',
+    color: '#3b5998',
+  },
+  listContainer: {
+    paddingBottom: 20,
+  },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: 'rgba(76, 102, 159, 0.07)',
+    marginBottom: 12,
+    elevation: 2,
+  },
+  thumbnail: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 15,
+  },
+  placeholder: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    backgroundColor: 'rgba(59, 89, 152, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 15,
+  },
+  textContainer: {
+    flex: 1,
+    marginRight: 10,
+  },
+  itemTitle: {
+    color: '#192f6a',
+    fontWeight: 'bold',
+    marginBottom: 4,
+    fontSize: 16,
+  },
+  itemDescription: {
+    color: '#666',
+    fontSize: 14,
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 50,
+  },
+  emptyText: {
+    color: '#4c669f',
+    marginTop: 10,
+    fontSize: 18,
+  },
 });
 
 export default FlatListScreen;
