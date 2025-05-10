@@ -105,8 +105,10 @@ cd ios && pod install && cd ..
 Remove the gradle in your machine and start again:
 
 `rm -rf /Users/yourusername/.gradle/`
-
+`cd android`
 `./gradlew clean build`
+`cd ..`
+`npx react-native run-android --verbose`
 - **Camera Issues**: Ensure permissions are granted and a camera-supported device is used.
 - **Dependency Conflicts**: Use `npm install --legacy-peer-deps` as a fallback.
 
